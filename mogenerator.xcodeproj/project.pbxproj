@@ -14,6 +14,8 @@
 		55200E970C49FEEA00018A42 /* DDCliUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 55200E920C49FEEA00018A42 /* DDCliUtil.m */; };
 		55200E980C49FEEA00018A42 /* DDGetoptLongParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 55200E950C49FEEA00018A42 /* DDGetoptLongParser.m */; };
 		55200F9D0C4A2CA800018A42 /* DDCliParseException.m in Sources */ = {isa = PBXBuildFile; fileRef = 55200F9C0C4A2CA800018A42 /* DDCliParseException.m */; };
+		5ADEFD2E1A6568B600BE8F2F /* _MiscMergeJsontypeCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 5ADEFD2D1A6568B600BE8F2F /* _MiscMergeJsontypeCommand.m */; };
+		5ADEFD311A65889D00BE8F2F /* _MiscMergeJsonpropertyCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 5ADEFD301A65889D00BE8F2F /* _MiscMergeJsonpropertyCommand.m */; };
 		7931E67810FE982500175784 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7931E67710FE982500175784 /* libicucore.dylib */; };
 		7931E67B10FE984F00175784 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 7931E67A10FE984F00175784 /* RegexKitLite.m */; };
 		79D2BF3F0ACFB25B00F3F141 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79D2BF3E0ACFB25B00F3F141 /* CoreData.framework */; };
@@ -80,6 +82,10 @@
 		55200E950C49FEEA00018A42 /* DDGetoptLongParser.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = DDGetoptLongParser.m; sourceTree = "<group>"; };
 		55200F9B0C4A2CA800018A42 /* DDCliParseException.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = DDCliParseException.h; sourceTree = "<group>"; };
 		55200F9C0C4A2CA800018A42 /* DDCliParseException.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = DDCliParseException.m; sourceTree = "<group>"; };
+		5ADEFD2C1A6568B600BE8F2F /* _MiscMergeJsontypeCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MiscMergeJsontypeCommand.h; sourceTree = "<group>"; };
+		5ADEFD2D1A6568B600BE8F2F /* _MiscMergeJsontypeCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MiscMergeJsontypeCommand.m; sourceTree = "<group>"; };
+		5ADEFD2F1A65889D00BE8F2F /* _MiscMergeJsonpropertyCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MiscMergeJsonpropertyCommand.h; sourceTree = "<group>"; };
+		5ADEFD301A65889D00BE8F2F /* _MiscMergeJsonpropertyCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MiscMergeJsonpropertyCommand.m; sourceTree = "<group>"; };
 		7931E67710FE982500175784 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		7931E67910FE984F00175784 /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
 		7931E67A10FE984F00175784 /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
@@ -341,6 +347,10 @@
 				79D2BF9E0ACFB51A00F3F141 /* NSScanner+MiscMerge.m */,
 				79D2BF9F0ACFB51A00F3F141 /* NSString+MiscAdditions.h */,
 				79D2BFA00ACFB51A00F3F141 /* NSString+MiscAdditions.m */,
+				5ADEFD2C1A6568B600BE8F2F /* _MiscMergeJsontypeCommand.h */,
+				5ADEFD2D1A6568B600BE8F2F /* _MiscMergeJsontypeCommand.m */,
+				5ADEFD2F1A65889D00BE8F2F /* _MiscMergeJsonpropertyCommand.h */,
+				5ADEFD301A65889D00BE8F2F /* _MiscMergeJsonpropertyCommand.m */,
 			);
 			path = MiscMerge;
 			sourceTree = "<group>";
@@ -417,6 +427,7 @@
 				79D2BFA80ACFB51A00F3F141 /* _MiscMergeContinueCommand.m in Sources */,
 				79D2BFAA0ACFB51A00F3F141 /* _MiscMergeCopyCommand.m in Sources */,
 				79D2BFAC0ACFB51A00F3F141 /* _MiscMergeDateCommand.m in Sources */,
+				5ADEFD311A65889D00BE8F2F /* _MiscMergeJsonpropertyCommand.m in Sources */,
 				79D2BFAE0ACFB51A00F3F141 /* _MiscMergeDebugCommand.m in Sources */,
 				79D2BFB00ACFB51A00F3F141 /* _MiscMergeDelayedParseCommand.m in Sources */,
 				79D2BFB20ACFB51A00F3F141 /* _MiscMergeElseCommand.m in Sources */,
@@ -442,6 +453,7 @@
 				79D2BFDA0ACFB51A00F3F141 /* KeyValue+MiscMerge.m in Sources */,
 				79D2BFDC0ACFB51A00F3F141 /* MiscMergeCommand.m in Sources */,
 				79D2BFDE0ACFB51A00F3F141 /* MiscMergeCommandBlock.m in Sources */,
+				5ADEFD2E1A6568B600BE8F2F /* _MiscMergeJsontypeCommand.m in Sources */,
 				79D2BFE00ACFB51A00F3F141 /* MiscMergeDriver.m in Sources */,
 				79D2BFE20ACFB51A00F3F141 /* MiscMergeEngine.m in Sources */,
 				79D2BFE40ACFB51A00F3F141 /* MiscMergeExpression.m in Sources */,

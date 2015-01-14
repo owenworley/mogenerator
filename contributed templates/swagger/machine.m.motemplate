@@ -1,0 +1,39 @@
+#import "_<$DefinitionName$>.h"
+#import <FastEasyMapping/FastEasyMapping.h>
+<$foreach Property properties do$>
+	<$if Property.$ref$>
+#import "_<$Property.$ref$>.h" 
+	<$elseif Property.type == array$>
+		<$foreach PropItem Property do$>
+			<$foreach PropItemChild PropItem do$>
+				<$if PropItemChildKey == $ref$>
+#import "_<$PropItemChild$>.h" 
+				<$endif$>
+			<$endforeach do$>
+		<$endforeach do$>  
+	<$endif$>
+<$endforeach do$>  
+
+@implementation <$DefinitionName$>
+
++ (FEMObjectMapping *) objectMapping{
+    return [FEMObjectMapping mappingForClass:[<$DefinitionName$> class]
+                               configuration:^(FEMObjectMapping *mapping) {
+<$foreach Property properties do$>
+<$if Property.$ref$>
+		[mapping addRelationshipMapping:[<$Property.$ref$> objectMapping] forProperty:@"<$PropertyKey$>" keyPath:@"<$PropertyKey$>"];
+<$elseif Property.type == array$>
+	<$foreach PropItem Property do$>
+		<$foreach PropItemChild PropItem do$>
+			<$if PropItemChildKey == $ref$>
+		[mapping addToManyRelationshipMapping:[<$PropItemChild$> objectMapping] forProperty:@"<$PropertyKey$>" keyPath:@"<$PropertyKey$>"];
+			<$endif$>
+		<$endforeach do$>
+	<$endforeach do$>
+<$else$>
+		[mapping addAttributeWithProperty:@"<$PropertyKey$>" keyPath:@"<$PropertyKey$>"];
+<$endif$>
+<$endforeach do$>
+	}];
+}
+@end

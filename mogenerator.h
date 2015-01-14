@@ -61,6 +61,7 @@
     NSString              *origModelBasePath;
     NSString              *tempGeneratedMomFilePath;
     NSManagedObjectModel  *model;
+    NSDictionary          *swagger;
     NSString              *configuration;
     NSString              *baseClass;
     NSString              *baseClassImport;

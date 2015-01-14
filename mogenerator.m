@@ -668,6 +668,8 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
         {@"v2",                 '2',   DDGetoptNoArgument},
         
         {@"model",              'm',   DDGetoptRequiredArgument},
+        {@"swagger",            's',   DDGetoptRequiredArgument},
+
         {@"configuration",      'C',   DDGetoptRequiredArgument},
         {@"base-class",         0,     DDGetoptRequiredArgument},
         {@"base-class-import",  0,     DDGetoptRequiredArgument},
@@ -773,6 +775,26 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
     }
     
     return result;
+}
+
+- (void) setSwagger:(NSString *)swaggerPath{
+    assert(!swagger); //Only load one swagger file
+
+    NSFileManager *fm = [NSFileManager defaultManager];
+
+    if (![fm fileExistsAtPath:swaggerPath]) {
+        NSString *reason = [NSString stringWithFormat:@"error loading file at %@: no such file exists", swaggerPath];
+        DDCliParseException *e = [DDCliParseException parseExceptionWithReason:reason
+                                                                      exitCode:EX_NOINPUT];
+        @throw e;
+    }
+
+    NSData *swaggerData = [NSData dataWithContentsOfFile:swaggerPath];
+    swagger = [NSJSONSerialization JSONObjectWithData:swaggerData
+                                              options:NSJSONReadingAllowFragments
+                                                error:nil];
+
+
 }
 
 - (void)setModel:(NSString*)momOrXCDataModelFilePath {
@@ -1017,8 +1039,79 @@ NSString *ApplicationSupportSubdirectoryName = @"mogenerator";
     
     int machineFilesGenerated = 0;        
     int humanFilesGenerated = 0;
-    
+
+
+    if (swagger) {
+        assert(!model); //Model and swagger are mutually exclusive
+        assert(!_swift); //Swift is not supported yet
+        MiscMergeEngine *machineH = nil;
+        MiscMergeEngine *machineM = nil;
+
+        machineH = engineWithTemplateDesc([self templateDescNamed:@"machine.h.motemplate"]);
+        assert(machineH);
+        machineM = engineWithTemplateDesc([self templateDescNamed:@"machine.m.motemplate"]);
+        assert(machineM);
+
+        // Add the template var dictionary to each of the merge engines
+        [machineH setEngineValue:templateVar forKey:kTemplateVar];
+        [machineM setEngineValue:templateVar forKey:kTemplateVar];
+
+        NSMutableArray *machineHFiles = [NSMutableArray array];
+        NSMutableArray *machineMFiles = [NSMutableArray array];
+
+        for (NSString *definitionName in swagger[@"definitions"]) {
+            NSMutableDictionary *definition = [swagger[@"definitions"][definitionName] mutableCopy];
+            definition[@"DefinitionName"] =  definitionName;
+            NSString *extension;
+            NSString *fileName;
+
+            // Machine header files.
+            extension = @"h";
+            fileName = definitionName;
+            NSString *generatedMachineH = [machineH executeWithObject:definition sender:nil];
+
+            // remove unnecessary empty lines
+            generatedMachineH = [generatedMachineH stringByReplacingOccurrencesOfRegex:@"([ \t]*(\n|\r|\r\n)){2,}" withString:@"\n\n"];
+
+            NSString *machineHFileName = [machineDir stringByAppendingPathComponent:
+                                          [NSString stringWithFormat:@"_%@.%@", fileName, extension]];
+            if (_listSourceFiles) {
+                [machineHFiles addObject:machineHFileName];
+            } else {
+                if (![fm regularFileExistsAtPath:machineHFileName] || ![generatedMachineH isEqualToString:[NSString stringWithContentsOfFile:machineHFileName encoding:NSUTF8StringEncoding error:nil]]) {
+                    //  If the file doesn't exist or is different than what we just generated, write it out.
+                    [generatedMachineH writeToFile:machineHFileName atomically:NO encoding:NSUTF8StringEncoding error:nil];
+                    machineFilesGenerated++;
+                }
+            }
+
+            // Machine source files.
+            extension = @"m";
+            fileName = definitionName;
+            NSString *generatedMachineM = [machineM executeWithObject:definition sender:nil];
+
+            // remove unnecessary empty lines
+            generatedMachineM = [generatedMachineM stringByReplacingOccurrencesOfRegex:@"([ \t]*(\n|\r|\r\n)){2,}" withString:@"\n\n"];
+
+            NSString *machineMFileName = [machineDir stringByAppendingPathComponent:
+                                          [NSString stringWithFormat:@"_%@.%@", fileName, extension]];
+            if (_listSourceFiles) {
+                [machineMFiles addObject:machineMFileName];
+            } else {
+                if (![fm regularFileExistsAtPath:machineMFileName] || ![machineMFileName isEqualToString:[NSString stringWithContentsOfFile:machineMFileName encoding:NSUTF8StringEncoding error:nil]]) {
+                    //  If the file doesn't exist or is different than what we just generated, write it out.
+                    [generatedMachineM writeToFile:machineMFileName atomically:NO encoding:NSUTF8StringEncoding error:nil];
+                    machineFilesGenerated++;
+                }
+            }
+
+
+        }
+    }
+
+
     if (model) {
+        assert(!swagger); //Model and swagger are mutually exclusive
         MiscMergeEngine *machineH = nil;
         MiscMergeEngine *machineM = nil;
         MiscMergeEngine *humanH = nil;

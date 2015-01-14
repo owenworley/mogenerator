@@ -1,0 +1,44 @@
+#import <Foundation/Foundation.h>
+
+@class FEMObjectMapping;
+<$foreach Property properties do$>
+	<$if Property.$ref$>
+@class <$Property.$ref$>;
+	<$elseif Property.type == array$>
+		<$foreach PropItem Property do$>
+			<$foreach PropItemChild PropItem do$>
+				<$if PropItemChildKey == $ref$>
+@class <$PropItemChild$>;
+				<$endif$>
+			<$endforeach do$>
+		<$endforeach do$>  
+	<$endif$>
+<$endforeach do$>  
+
+<$foreach Property properties do$>
+	<$if Property.enum$>
+typedef NS_ENUM(NSInteger, <$DefinitionName$><$PropertyKey$>) {
+		<$foreach EnumType Property.enum do$>
+	<$DefinitionName$><$PropertyKey$><$EnumType$> = <$EnumTypeIndex$>,
+		<$endforeach do$>
+};
+	<$endif$>
+<$endforeach do$>
+
+/**
+ *  <$description$>
+ */
+@interface <$DefinitionName$> : NSObject 
+<$foreach Property properties do$>
+<$if Property.description $>
+/**
+ * <$Property.description$>
+ */<$endif$>
+<$if Property.enum $>@property (nonatomic, assign) <$DefinitionName$><$PropertyKey$> <$PropertyKey$>;
+<$elseif Property.$ref$>@property (nonatomic, strong) <$Property.$ref$> *<$PropertyKey$>;
+<$else$>@property (nonatomic, <$JSONProperty <$Property.type$>$><$if Property.readOnly$>, readonly<$endif$>) <$JSONType <$Property.type$>$><$PropertyKey$>;
+<$endif$>
+<$endforeach do$>  
+
++ (FEMObjectMapping *) objectMapping; 
+@end
